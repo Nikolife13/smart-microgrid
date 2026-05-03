@@ -1,0 +1,20 @@
+{
+  "name": "smart-microgrid",
+  "version": "1.0.0",
+  "description": "Distributed system for clean energy simulation with gRPC",
+  "main": "index.js",
+  "scripts": {
+    "naming": "node services/naming_server.js",
+    "solar": "node services/solar_panel.js",
+    "meter": "node services/smart_meter.js",
+    "battery": "node services/battery.js",
+    "gui": "node gui/server.js"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.9.0",
+    "@grpc/proto-loader": "^0.7.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.0"
+  }
+}
