@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package battery;
+
+service BatteryStorage {
+  rpc ManageBattery (stream Command) returns (stream Status);
+}
+
+enum CommandType {
+  CHARGE = 0;
+  DISCHARGE = 1;
+  GET_STATUS = 2;
+}
+
+message Command {
+  CommandType type = 1;
+  double power_w = 2;
+}
+
+message Status {
+  double charge_percent = 1;
+  double current_power_w = 2;
+  string mode = 3;
+}

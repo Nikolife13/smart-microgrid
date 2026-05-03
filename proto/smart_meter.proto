@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package smartmeter;
+
+service SmartMeter {
+  rpc SubmitReadings (stream Reading) returns (Summary);
+}
+
+message Reading {
+  int64 timestamp_sec = 1;
+  double watts = 2;
+}
+
+message Summary {
+  double total_energy_wh = 1;
+  double avg_power_w = 2;
+  int32 readings_count = 3;
+}

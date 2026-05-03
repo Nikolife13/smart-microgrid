@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package solar;
+
+service SolarPanel {
+  rpc StreamPower (Empty) returns (stream PowerSample);
+  rpc GetCurrentPower (Empty) returns (PowerResponse);
+}
+
+message Empty {}
+
+message PowerSample {
+  int64 timestamp_sec = 1;
+  double watts = 2;
+}
+
+message PowerResponse {
+  double watts = 1;
+}
