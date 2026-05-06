@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Microgrid - Clean Energy Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f9f4; }
+        .container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .card { background: white; border-radius: 10px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex: 1; min-width: 250px; }
+        h2 { margin-top: 0; color: #2c7a2c; }
+        button { background: #2c7a2c; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #1f5a1f; }
+        pre { background: #eee; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .status { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>⚡ Smart Microgrid for Affordable & Clean Energy</h1>
+    <div class="container">
+        <!-- Solar Panel -->
+        <div class="card">
+            <h2>☀️ Solar Panel</h2>
+            <button id="getPowerBtn">Get Current Power</button>
+            <button id="startStreamBtn">Start Live Stream</button>
+            <button id="stopStreamBtn">Stop Stream</button>
+            <div id="solarOutput"></div>
+        </div>
+        <!-- Smart Meter -->
+        <div class="card">
+            <h2>📊 Smart Meter</h2>
+            <p>Submit sample readings (JSON array):</p>
+            <textarea id="readingsInput" rows="4" cols="40">[{"timestamp_sec":1745000000,"watts":1200},{"timestamp_sec":1745003600,"watts":1350}]</textarea>
+            <button id="submitReadingsBtn">Submit Readings</button>
+            <div id="meterOutput"></div>
+        </div>
+        <!-- Battery -->
+        <div class="card">
+            <h2>🔋 Battery Storage</h2>
+            <button id="getBatteryStatusBtn">Get Status</button>
+            <button id="chargeBtn">Charge (+5%)</button>
+            <button id="dischargeBtn">Discharge (-5%)</button>
+            <div id="batteryOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        // Helper for API calls
+        async function apiCall(url, options = {}) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error(await response.text());
+                return await response.json();
+            } catch(e) {
+                console.error(e);
+                return { error: e.message };
+            }
+        }
+
+        // Solar current power
+        document.getElementById('getPowerBtn').onclick = async () => {
+            const data = await apiCall('/api/solar/current');
+            document.getElementById('solarOutput').innerHTML = `<pre>Current Power: ${data.watts?.toFixed(2) || 'N/A'} W</pre>`;
+        };
+
+        let eventSource = null;
+        document.getElementById('startStreamBtn').onclick = () => {
+            if (eventSource) eventSource.close();
+            eventSource = new EventSource('/api/solar/stream');
+            const outputDiv = document.getElementById('solarOutput');
+            outputDiv.innerHTML = '<p>Receiving live stream...</p>';
+            eventSource.onmessage = (event) => {
+                const sample = JSON.parse(event.data);
+                outputDiv.innerHTML += `<p>Time ${sample.timestamp_sec}: ${sample.watts.toFixed(2)} W</p>`;
+                outputDiv.scrollTop = outputDiv.scrollHeight;
+            };
+            eventSource.onerror = () => {
+                outputDiv.innerHTML += '<p style="color:red">Stream disconnected</p>';
+                eventSource.close();
+                eventSource = null;
+            };
+        };
+        document.getElementById('stopStreamBtn').onclick = () => {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+                document.getElementById('solarOutput').innerHTML += '<p>Stream stopped.</p>';
+            }
+        };
+
+        // Smart Meter submit
+        document.getElementById('submitReadingsBtn').onclick = async () => {
+            const raw = document.getElementById('readingsInput').value;
+            let readings;
+            try {
+                readings = JSON.parse(raw);
+            } catch(e) {
+                document.getElementById('meterOutput').innerHTML = '<p style="color:red">Invalid JSON</p>';
+                return;
+            }
+            const res = await apiCall('/api/meter/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ readings })
+            });
+            document.getElementById('meterOutput').innerHTML = `<pre>${JSON.stringify(res, null, 2)}</pre>`;
+        };
+
+        // Battery helpers
+        async function batteryCommand(type, power_w = 0) {
+            const res = await apiCall('/api/battery/command', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, power_w })
+            });
+            document.getElementById('batteryOutput').innerHTML = `<pre>${JSON.stringify(res, null, 2)}</pre>`;
+        }
+
+        document.getElementById('getBatteryStatusBtn').onclick = async () => {
+            const res = await apiCall('/api/battery/status');
+            document.getElementById('batteryOutput').innerHTML = `<pre>${JSON.stringify(res, null, 2)}</pre>`;
+        };
+        document.getElementById('chargeBtn').onclick = () => batteryCommand(0, 500); // type CHARGE=0
+        document.getElementById('dischargeBtn').onclick = () => batteryCommand(1, 300); // DISCHARGE=1
+    </script>
+</body>
+</html>
