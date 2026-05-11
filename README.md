@@ -39,7 +39,7 @@ npm
 Installation
 Bash
 # Clone the repository
-git clone [https://github.com/Nikolife13/smart-microgrid.git](https://github.com/Nikolife13/smart-microgrid.git)
+git clone (https://github.com/Nikolife13/smart-microgrid.git)
 
 # Navigate into the project
 cd smart-microgrid
