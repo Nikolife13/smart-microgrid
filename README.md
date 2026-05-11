@@ -48,12 +48,12 @@ npm install
 
 Running the System
 Open five separate terminal tabs and run the following commands in order:
-Step,Service,Command,Port
-1,Naming Service,npm run naming,50055
-2,Solar Panel,npm run solar,50051
-3,Smart Meter,npm run meter,50052
-4,Battery Storage,npm run battery,50053
-5,Web GUI,npm run gui,3000
+Step     Service,       Command                Port
+1    Naming Service     npm run naming         50055
+2    Solar Panel        npm run solar          50051
+3    Smart Meter        npm run meter          50052
+4    Battery Storage    npm run battery        50053
+5    Web GUI            npm run gui            3000
 
 Access the Dashboard: Once all services are running, visit http://localhost:3000.
 📡 RPC Implementation Details
