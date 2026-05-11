@@ -1,4 +1,4 @@
-Since you’ve already got the core content down, I’ve polished this to look professional, developer-friendly, and visually organized. I added badges, improved the visual hierarchy, and used a cleaner layout for the installation and usage sections.Copy and paste the code block below into your README.md:Markdown# ⚡ Smart Microgrid – Affordable and Clean Energy Simulation
+⚡ Smart Microgrid – Affordable and Clean Energy Simulation
 
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen)](https://nodejs.org/)
 [![gRPC](https://img.shields.io/badge/gRPC-Framework-blue)](https://grpc.io/)
