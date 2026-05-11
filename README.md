@@ -34,12 +34,54 @@ smart-microgrid/
 │   └── public/          # Client-side assets
 ├── package.json
 └── README.md
-🚀 Getting StartedPrerequisitesNode.js (v14 or higher)npmInstallationBash# Clone the repository
+🚀 Getting StartedPrerequisitesNode.js (v14 or higher)
+npm
+Installation
+Bash
+# Clone the repository
 git clone [https://github.com/Nikolife13/smart-microgrid.git](https://github.com/Nikolife13/smart-microgrid.git)
 
 # Navigate into the project
 cd smart-microgrid
-
 # Install dependencies
 npm install
-Running the SystemOpen five separate terminal tabs and run the following commands in order:StepServiceCommandPort1Naming Servicenpm run naming500552Solar Panelnpm run solar500513Smart Meternpm run meter500524Battery Storagenpm run battery500535Web GUInpm run gui3000Access the Dashboard: Once all services are running, visit http://localhost:3000.📡 RPC Implementation DetailsThis project demonstrates all four gRPC communication patterns:Unary (GetCurrentPower): Simple request-response to fetch instantaneous solar data.Server-Streaming (StreamPower): Real-time telemetry feed from the solar panels every 2 seconds.Client-Streaming (SubmitReadings): Batch upload of energy consumption data for server-side processing and summarization.Bidirectional Streaming (ManageBattery): Real-time control loop where client commands and battery status updates flow simultaneously.✨ Advanced FeaturesService Discovery: Services register themselves with the Naming Service, allowing the GUI to locate them dynamically.Deadlines & Timeouts: All gRPC calls include enforced deadlines (5s-10s) to prevent system hangs.Metadata Integration: The GUI passes a user-id header in metadata for service-side logging and auditing.Resource Management: Stream cancellation is handled properly; closing the browser UI triggers server-side cleanup.Robust Error Handling: Custom gRPC error codes (e.g., INVALID_ARGUMENT, UNAVAILABLE) with human-readable feedback.📸 Demo & MediaScreenshots(Upload your screenshots to a folder like assets/ and link them here)![Dashboard UI](./assets/dashboard.png)Video Demonstration📺 Watch the Video Walkthrough👨‍💻 AuthorNikolaiStudent at National College of IrelandDistributed Systems Module📄 LicenseThis project was created for educational purposes as part of a University assignment.
+
+Running the System
+Open five separate terminal tabs and run the following commands in order:
+Step,Service,Command,Port
+1,Naming Service,npm run naming,50055
+2,Solar Panel,npm run solar,50051
+3,Smart Meter,npm run meter,50052
+4,Battery Storage,npm run battery,50053
+5,Web GUI,npm run gui,3000
+
+Access the Dashboard: Once all services are running, visit http://localhost:3000.
+📡 RPC Implementation Details
+This project demonstrates all four gRPC communication patterns:
+
+Unary (GetCurrentPower): Simple request-response to fetch instantaneous solar data.
+
+Server-Streaming (StreamPower): Real-time telemetry feed from the solar panels every 2 seconds.
+
+Client-Streaming (SubmitReadings): Batch upload of energy consumption data for server-side processing and summarization.
+
+Bidirectional Streaming (ManageBattery): Real-time control loop where client commands and battery status updates flow simultaneously.
+
+✨ Advanced Features
+Service Discovery: Services register themselves with the Naming Service, allowing the GUI to locate them dynamically.
+
+Deadlines & Timeouts: All gRPC calls include enforced deadlines (5s-10s) to prevent system hangs.
+
+Metadata Integration: The GUI passes a user-id header in metadata for service-side logging and auditing.
+
+Resource Management: Stream cancellation is handled properly; closing the browser UI triggers server-side cleanup.
+
+Robust Error Handling: Custom gRPC error codes (e.g., INVALID_ARGUMENT, UNAVAILABLE) with human-readable feedback.
+
+👨‍💻 Author
+Vitakii Nikitenko
+
+Student at National College of Ireland
+
+Distributed Systems Module
+
